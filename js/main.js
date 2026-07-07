@@ -92,6 +92,7 @@
   };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let contextTransitionTimer;
+  const carouselControllers = [];
 
   const elements = {
     tabs: [...document.querySelectorAll('[role="tab"][data-context]')],
@@ -106,9 +107,9 @@
     otherContextLink: document.querySelector('[data-other-context]'),
     quizForm: document.querySelector('#quiz-form'),
     quizSubmit: document.querySelector('#quiz-submit'),
-    menuToggle: document.querySelector('.menu-toggle'),
-    menu: document.querySelector('#main-menu'),
-    floatingWhatsApp: document.querySelector('.floating-whatsapp')
+    miniSwitch: document.querySelector('[data-mini-switch]'),
+    contextDecorations: [...document.querySelectorAll('[data-context-decoration]')],
+    floatingActions: document.querySelector('.floating-actions')
   };
 
   function getInitialContext() {
@@ -202,6 +203,12 @@
     elements.chip.textContent = config.chip;
     elements.secondaryCta.textContent = config.secondaryCta;
     elements.dynamicIcon.setAttribute('href', config.icon);
+    elements.miniSwitch.querySelector('use').setAttribute('href', config.icon);
+    const nextContext = context === 'visto' ? 'veicular' : 'visto';
+    const nextContextLabel = nextContext === 'visto' ? 'Visto' : 'Veicular';
+    elements.miniSwitch.setAttribute('aria-label', `Alternar para o modo ${nextContextLabel}`);
+    elements.miniSwitch.title = `Alternar para ${nextContextLabel}`;
+    elements.contextDecorations.forEach((icon) => icon.setAttribute('href', config.icon));
 
     elements.tabs.forEach((tab) => {
       const isActive = tab.dataset.context === context;
@@ -216,6 +223,7 @@
     updateServicePriority();
     updateStandardWhatsAppLinks();
     renderQuiz();
+    window.requestAnimationFrame(refreshCarousels);
 
     try {
       window.sessionStorage.setItem('service_context', context);
@@ -280,6 +288,10 @@
     setContext(elements.otherContextLink.dataset.otherContext);
   });
 
+  elements.miniSwitch.addEventListener('click', () => {
+    setContext(state.context === 'visto' ? 'veicular' : 'visto');
+  });
+
   document.querySelectorAll('.js-whatsapp').forEach((link) => {
     link.addEventListener('click', () => {
       trackEvent('click_whatsapp', {
@@ -287,6 +299,17 @@
         service_name: link.dataset.serviceName || 'atendimento_geral',
         cta_location: link.dataset.ctaLocation || 'unknown',
         link_url: `https://wa.me/${WHATSAPP_NUMBER}`
+      });
+    });
+  });
+
+  document.querySelectorAll('.js-instagram').forEach((link) => {
+    link.addEventListener('click', () => {
+      trackEvent('click_instagram', {
+        service_type: state.context,
+        service_name: 'instagram',
+        cta_location: link.dataset.ctaLocation || 'unknown',
+        link_url: 'https://www.instagram.com/andre.despachante1/'
       });
     });
   });
@@ -377,26 +400,6 @@
     });
   });
 
-  function closeMenu() {
-    elements.menuToggle.setAttribute('aria-expanded', 'false');
-    elements.menuToggle.setAttribute('aria-label', 'Abrir menu');
-    elements.menu.classList.remove('is-open');
-    document.body.classList.remove('menu-open');
-  }
-
-  elements.menuToggle.addEventListener('click', () => {
-    const willOpen = elements.menuToggle.getAttribute('aria-expanded') !== 'true';
-    elements.menuToggle.setAttribute('aria-expanded', String(willOpen));
-    elements.menuToggle.setAttribute('aria-label', willOpen ? 'Fechar menu' : 'Abrir menu');
-    elements.menu.classList.toggle('is-open', willOpen);
-    document.body.classList.toggle('menu-open', willOpen);
-  });
-
-  elements.menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeMenu();
-  });
-
   document.querySelectorAll('.faq-item').forEach((item, index) => {
     item.addEventListener('toggle', () => {
       if (!item.open) return;
@@ -435,6 +438,125 @@
     link.addEventListener('click', (event) => event.preventDefault());
   });
 
+  function initializeCarousels() {
+    document.querySelectorAll('[data-carousel]').forEach((shell) => {
+      const track = shell.querySelector('.carousel-track');
+      const items = [...track.children];
+      const previousButton = shell.querySelector('[data-carousel-prev]');
+      const nextButton = shell.querySelector('[data-carousel-next]');
+      const dotsContainer = shell.querySelector('.carousel-dots');
+      let activeIndex = 0;
+      let scrollFrame;
+
+      const dots = items.map((item, index) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', `Ir para o item ${index + 1}`);
+        dot.addEventListener('click', () => scrollToItem(index));
+        dotsContainer.append(dot);
+        return dot;
+      });
+
+      function scrollToItem(index) {
+        const item = items[index];
+        if (!item || track.clientWidth === 0) return;
+        const trackRect = track.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+        const left = track.scrollLeft + itemRect.left - trackRect.left - (track.clientWidth - itemRect.width) / 2;
+        track.scrollTo({ left, behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+
+      function update() {
+        if (track.clientWidth === 0) return;
+        const hasOverflow = track.scrollWidth > track.clientWidth + 4;
+        shell.classList.toggle('is-static', !hasOverflow);
+        if (!hasOverflow) {
+          activeIndex = 0;
+          dots.forEach((dot, index) => dot.classList.toggle('is-active', index === 0));
+          previousButton.disabled = true;
+          nextButton.disabled = true;
+          return;
+        }
+        const trackRect = track.getBoundingClientRect();
+        const center = trackRect.left + trackRect.width / 2;
+        let closestDistance = Infinity;
+
+        items.forEach((item, index) => {
+          const rect = item.getBoundingClientRect();
+          const distance = Math.abs(rect.left + rect.width / 2 - center);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            activeIndex = index;
+          }
+        });
+
+        dots.forEach((dot, index) => dot.classList.toggle('is-active', index === activeIndex));
+        previousButton.disabled = activeIndex === 0;
+        nextButton.disabled = activeIndex === items.length - 1;
+      }
+
+      track.addEventListener('scroll', () => {
+        window.cancelAnimationFrame(scrollFrame);
+        scrollFrame = window.requestAnimationFrame(update);
+      }, { passive: true });
+      previousButton.addEventListener('click', () => scrollToItem(Math.max(0, activeIndex - 1)));
+      nextButton.addEventListener('click', () => scrollToItem(Math.min(items.length - 1, activeIndex + 1)));
+
+      const controller = {
+        refresh() {
+          if (track.closest('[hidden]')) return;
+          track.scrollLeft = 0;
+          window.requestAnimationFrame(update);
+        }
+      };
+      carouselControllers.push(controller);
+      update();
+    });
+  }
+
+  function refreshCarousels() {
+    carouselControllers.forEach((controller) => controller.refresh());
+  }
+
+  function initializeCounters() {
+    const group = document.querySelector('[data-counter-group]');
+    if (!group) return;
+    const counters = [...group.querySelectorAll('[data-counter]')];
+
+    const formatValue = (value, decimals) => value.toFixed(decimals).replace('.', ',');
+    const showFinalValues = () => counters.forEach((counter) => {
+      counter.textContent = formatValue(Number(counter.dataset.value), Number(counter.dataset.decimals || 0));
+    });
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      showFinalValues();
+      return;
+    }
+
+    counters.forEach((counter) => { counter.textContent = formatValue(0, Number(counter.dataset.decimals || 0)); });
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      const start = performance.now();
+      const duration = 900;
+
+      const animate = (now) => {
+        const progress = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        counters.forEach((counter) => {
+          const target = Number(counter.dataset.value);
+          const decimals = Number(counter.dataset.decimals || 0);
+          counter.textContent = formatValue(target * eased, decimals);
+        });
+        if (progress < 1) window.requestAnimationFrame(animate);
+        else showFinalValues();
+      };
+      window.requestAnimationFrame(animate);
+    }, { threshold: 0.35 });
+
+    observer.observe(group);
+  }
+
   function initializeReveals() {
     const revealElements = document.querySelectorAll('.reveal');
     if (!('IntersectionObserver' in window)) {
@@ -465,25 +587,29 @@
   }
 
   function updateFloatingButton() {
-    if (!elements.floatingWhatsApp) return;
+    if (!elements.floatingActions) return;
 
-    const blockingSections = document.querySelectorAll('#servicos, #especialista, #avaliacoes, #pre-atendimento, #localizacao, .final-cta, .footer');
+    const blockingSections = document.querySelectorAll('#servicos, #especialista, #avaliacoes, #pre-atendimento, #localizacao, #faq, .final-cta, .footer');
     const hasBlockingSectionInView = [...blockingSections].some((section) => {
       const rect = section.getBoundingClientRect();
       return rect.top < window.innerHeight && rect.bottom > window.innerHeight * 0.45;
     });
 
-    elements.floatingWhatsApp.classList.toggle('is-visible', window.scrollY > 420 && !hasBlockingSectionInView);
+    elements.floatingActions.classList.toggle('is-visible', window.scrollY > 500 && !hasBlockingSectionInView);
   }
 
   window.addEventListener('scroll', updateFloatingButton, { passive: true });
   window.addEventListener('resize', () => {
-    if (window.innerWidth >= 980) closeMenu();
+    refreshCarousels();
+    updateFloatingButton();
   });
+  window.addEventListener('load', refreshCarousels, { once: true });
 
+  initializeCarousels();
   setContext(getInitialContext(), { track: false, updateUrl: false });
   initializePreloader();
   initializeReveals();
+  initializeCounters();
   updateFloatingButton();
   document.querySelector('#current-year').textContent = String(new Date().getFullYear());
 })();

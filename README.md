@@ -11,7 +11,7 @@ js/main.js
 assets/
   logo-andre-fernandes.webp
   andre-fernandes.webp
-  placeholder-map.svg
+  google-icon.webp
 robots.txt
 sitemap.xml
 ```
@@ -45,7 +45,7 @@ Todos os caminhos internos são relativos e funcionam em repositórios publicado
 
 - `assets/logo-andre-fernandes.webp`: logo circular principal, usada na navegação, preloader e watermarks.
 - `assets/andre-fernandes.webp`: foto recortada usada no hero e na seção do especialista.
-- `assets/placeholder-map.svg`: imagem estática do mapa. Pode ser trocada por WebP otimizado.
+- `assets/google-icon.webp`: ícone usado na prova social e nos cards de avaliação.
 
 Se o nome ou a extensão dos arquivos mudar, atualize as referências em `index.html` e `css/style.css`. Mantenha `width` e `height` nas tags de imagem para evitar mudanças de layout.
 
@@ -68,6 +68,7 @@ Eventos implementados:
 - `click_whatsapp`
 - `click_call`
 - `click_routes`
+- `click_instagram`
 - `switch_visto`
 - `switch_veicular`
 - `service_click`
@@ -101,7 +102,7 @@ Atualize também `og:url`, `og:image`, `twitter:image`, `@id`, `url` e `image` d
 
 ### Google Maps
 
-Em `index.html`, procure pelo comentário `TODO: substituir pelo link curto oficial do Google Maps`. Troque o link de pesquisa pelo link confirmado do Google Business Profile ou pela URL de rotas.
+O mapa é carregado por iframe apenas ao se aproximar da seção de localização. Em `index.html`, procure pelo comentário `TODO: substituir pelo link curto oficial do Google Maps` para atualizar o botão de rotas com o Google Business Profile confirmado.
 
 ### Avaliações
 
