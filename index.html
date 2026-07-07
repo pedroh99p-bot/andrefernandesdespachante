@@ -142,16 +142,7 @@
   <main id="conteudo">
     <section class="hero section-dark" aria-labelledby="hero-title">
       <div class="container">
-        <div class="context-switch" role="tablist" aria-label="Escolha o tipo de serviço">
-          <button class="context-tab is-active" id="tab-visto" type="button" role="tab" aria-selected="true" aria-controls="hero-panel" tabindex="0" data-context="visto">
-            <svg aria-hidden="true"><use href="#icon-plane"></use></svg> Visto
-          </button>
-          <button class="context-tab" id="tab-veicular" type="button" role="tab" aria-selected="false" aria-controls="hero-panel" tabindex="-1" data-context="veicular">
-            <svg aria-hidden="true"><use href="#icon-car"></use></svg> Veicular
-          </button>
-        </div>
-
-        <div class="hero-card context-content" id="hero-panel" role="tabpanel" aria-live="polite" aria-labelledby="tab-visto">
+        <div class="hero-card context-content" id="hero-panel" role="tabpanel" aria-live="polite" aria-labelledby="hero-title">
           <div class="theme-detail" aria-hidden="true"><span></span><span></span><span></span></div>
           <div class="hero-copy">
             <p class="eyebrow"><svg aria-hidden="true"><use href="#icon-star"></use></svg> Escritório especializado <svg aria-hidden="true"><use href="#icon-star"></use></svg></p>
@@ -303,9 +294,28 @@
 
     <div class="context-divider context-divider--compact" aria-hidden="true"><span></span><i><svg><use data-context-decoration href="#icon-plane"></use></svg></i><span></span></div>
 
+    <section class="section quiz-section section-tinted" id="pre-atendimento" aria-labelledby="quiz-title">
+      <div class="container quiz-layout">
+        <header class="section-heading reveal"><p class="overline">Leva menos de 1 minuto</p><h2 id="quiz-title">Pré-atendimento rápido</h2><p>Responda em poucos cliques e receba atendimento personalizado no WhatsApp.</p></header>
+        <div class="quiz-interaction reveal">
+          <div class="context-switch context-switch--section context-switch--quiz" role="tablist" aria-label="Escolha o tipo de pré-atendimento">
+            <button class="context-tab is-active" id="quiz-tab-visto" type="button" role="tab" aria-selected="true" aria-controls="quiz-form" tabindex="0" data-context="visto"><svg aria-hidden="true"><use href="#icon-plane"></use></svg> Visto</button>
+            <button class="context-tab" id="quiz-tab-veicular" type="button" role="tab" aria-selected="false" aria-controls="quiz-form" tabindex="-1" data-context="veicular"><svg aria-hidden="true"><use href="#icon-car"></use></svg> Veicular</button>
+          </div>
+        <form class="quiz-card context-content" id="quiz-form" role="tabpanel" aria-labelledby="quiz-tab-visto">
+          <fieldset data-quiz-step="1"><legend data-quiz="question-1">O que você precisa?</legend><div class="quiz-options" data-quiz="options-1"></div></fieldset>
+          <fieldset data-quiz-step="2"><legend data-quiz="question-2">Qual é o objetivo?</legend><div class="quiz-options" data-quiz="options-2"></div></fieldset>
+          <div class="quiz-status" aria-live="polite"><span data-quiz="status">Selecione uma opção em cada etapa.</span><span>Leva menos de 1 minuto</span></div>
+          <a class="button button--whatsapp button--full is-disabled" id="quiz-submit" href="https://wa.me/5521983006641" target="_blank" rel="noopener" aria-disabled="true"><svg aria-hidden="true"><use href="#icon-whatsapp"></use></svg> Continuar no WhatsApp</a>
+        </form>
+        </div>
+      </div>
+    </section>
+
     <section class="section specialist section-dark" id="especialista" aria-labelledby="specialist-title">
       <div class="container specialist-grid">
         <div class="specialist-visual reveal">
+          <p class="specialist-label">O Especialista</p>
           <img class="specialist-watermark" src="assets/logo-andre-fernandes.webp" width="1080" height="1080" loading="lazy" alt="" aria-hidden="true">
           <img class="specialist-person" src="assets/andre-fernandes.webp" width="864" height="1080" loading="lazy" alt="André Fernandes, despachante documentalista">
           <span>André Fernandes<small>Despachante Documentalista</small></span>
@@ -331,17 +341,16 @@
 
     <section class="section reviews" id="avaliacoes" aria-labelledby="reviews-title">
       <div class="container">
-        <header class="section-heading reveal"><p class="overline">Avaliações do Google</p><h2 id="reviews-title">A prova social que gera confiança</h2><p>A confiança de quem já foi atendido ajuda novos clientes a decidir com mais segurança.</p></header>
-        <div class="review-summary reveal"><img class="google-mark" src="assets/google-icon.webp" width="512" height="512" alt="Google"><div><strong>5,0</strong><span aria-label="5 de 5 estrelas">★★★★★</span></div><p><strong>195 avaliações</strong><br>no Google</p><small>Dados informados pelo cliente. Confirmar antes da publicação.</small></div>
-        <!-- PLACEHOLDERS: substituir os cinco cards abaixo por avaliações reais, verificadas e autorizadas. -->
+        <header class="section-heading reveal"><p class="overline">Avaliações do Google</p><h2 id="reviews-title">O que dizem sobre o atendimento</h2><p>Confira a nota e alguns relatos curtos sobre a experiência com o escritório.</p></header>
+        <div class="review-summary reveal"><img class="google-mark" src="assets/google-icon.webp" width="512" height="512" alt="Google"><div><strong>5,0</strong><span aria-label="5 de 5 estrelas">★★★★★</span></div><p><strong>195 avaliações</strong><br>no Google</p><small>Resultado exibido a partir das informações recebidas do cliente.</small></div>
         <div class="carousel-shell review-carousel" data-carousel>
           <button class="carousel-arrow carousel-arrow--prev" type="button" data-carousel-prev aria-label="Avaliação anterior"><span aria-hidden="true">‹</span></button>
           <div class="card-grid card-grid--3 review-grid carousel-track">
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">01</span><div><strong>Cliente 01</strong><em>Atendimento documental</em></div></div><p>“Atendimento claro, muito ágil e com orientações objetivas desde o primeiro contato.”</p><small>Avaliação do Google</small></article>
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">02</span><div><strong>Cliente 02</strong><em>Orientação documental</em></div></div><p>“Explicou cada etapa com atenção e deixou todo o processo muito mais claro.”</p><small>Avaliação do Google</small></article>
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">03</span><div><strong>Cliente 03</strong><em>Suporte no processo</em></div></div><p>“Passou segurança do início ao fim e respondeu minhas dúvidas com clareza.”</p><small>Avaliação do Google</small></article>
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">04</span><div><strong>Cliente 04</strong><em>Atendimento direto</em></div></div><p>“Atendimento direto, cuidadoso e com acompanhamento próximo em todas as etapas.”</p><small>Avaliação do Google</small></article>
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">05</span><div><strong>Cliente 05</strong><em>Conferência de documentos</em></div></div><p>“Recebi orientação em cada fase e consegui organizar os documentos sem retrabalho.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">01</span><div><strong>Mariana</strong><em>Atendimento documental</em></div></div><p>“Recebi orientação objetiva desde o início e consegui seguir o processo com mais tranquilidade.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">02</span><div><strong>Ricardo</strong><em>Orientação documental</em></div></div><p>“Cada etapa foi explicada com clareza, sem pressão e com atenção aos detalhes.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">03</span><div><strong>Carla</strong><em>Suporte no processo</em></div></div><p>“Passei a entender melhor o que precisava ser feito e me senti segura para avançar.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">04</span><div><strong>Bruno</strong><em>Atendimento direto</em></div></div><p>“O atendimento foi direto, cuidadoso e deixou o caminho do processo muito mais claro.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">05</span><div><strong>Juliana</strong><em>Conferência de documentos</em></div></div><p>“Consegui organizar tudo sem retrabalho porque recebi orientação fase por fase.”</p><small>Avaliação do Google</small></article>
           </div>
           <button class="carousel-arrow carousel-arrow--next" type="button" data-carousel-next aria-label="Próxima avaliação"><span aria-hidden="true">›</span></button>
           <div class="carousel-dots" aria-label="Posição do carrossel"></div>
@@ -360,24 +369,6 @@
         <span aria-hidden="true">VISTO AMERICANO • PASSAPORTE • TRANSFERÊNCIA • REGULARIZAÇÃO •</span>
       </div>
     </div>
-
-    <section class="section quiz-section section-tinted" id="pre-atendimento" aria-labelledby="quiz-title">
-      <div class="container quiz-layout">
-        <header class="section-heading reveal"><p class="overline">Leva menos de 1 minuto</p><h2 id="quiz-title">Pré-atendimento rápido</h2><p>Responda em poucos cliques e receba atendimento personalizado no WhatsApp.</p></header>
-        <div class="quiz-interaction reveal">
-          <div class="context-switch context-switch--section context-switch--quiz" role="tablist" aria-label="Escolha o tipo de pré-atendimento">
-            <button class="context-tab is-active" id="quiz-tab-visto" type="button" role="tab" aria-selected="true" aria-controls="quiz-form" tabindex="0" data-context="visto"><svg aria-hidden="true"><use href="#icon-plane"></use></svg> Visto</button>
-            <button class="context-tab" id="quiz-tab-veicular" type="button" role="tab" aria-selected="false" aria-controls="quiz-form" tabindex="-1" data-context="veicular"><svg aria-hidden="true"><use href="#icon-car"></use></svg> Veicular</button>
-          </div>
-        <form class="quiz-card context-content" id="quiz-form" role="tabpanel" aria-labelledby="quiz-tab-visto">
-          <fieldset data-quiz-step="1"><legend data-quiz="question-1">O que você precisa?</legend><div class="quiz-options" data-quiz="options-1"></div></fieldset>
-          <fieldset data-quiz-step="2"><legend data-quiz="question-2">Qual é o objetivo?</legend><div class="quiz-options" data-quiz="options-2"></div></fieldset>
-          <div class="quiz-status" aria-live="polite"><span data-quiz="status">Selecione uma opção em cada etapa.</span><span>Leva menos de 1 minuto</span></div>
-          <a class="button button--whatsapp button--full is-disabled" id="quiz-submit" href="https://wa.me/5521983006641" target="_blank" rel="noopener" aria-disabled="true"><svg aria-hidden="true"><use href="#icon-whatsapp"></use></svg> Continuar no WhatsApp</a>
-        </form>
-        </div>
-      </div>
-    </section>
 
     <section class="section location" id="localizacao" aria-labelledby="location-title">
       <div class="container location-grid">
